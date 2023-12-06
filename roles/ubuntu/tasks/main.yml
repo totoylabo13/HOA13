@@ -1,0 +1,93 @@
+  - name: Set OpenStack packages
+    set_fact:
+      openstack_packages:
+        - python3-openstackclient
+        - mariadb-server
+        - rabbitmq-server
+        - memcached
+        - etcd
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Update package cache for Ubuntu
+    apt:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install and configure NTP for Ubuntu
+    package:
+      name: ntp
+      state: present
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Start and enable NTP service for Ubuntu
+    service:
+      name: ntp
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install OpenStack for Ubuntu
+    apt:
+      name: python3-openstackclient
+      state: present
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install OpenStack packages for Ubuntu
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ openstack_packages }}"
+    tags: openstack-packages
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Update package cache for Ubuntu
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ openstack_packages }}"
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install database server for Ubuntu
+    package:
+      name: mariadb-server
+      state: present
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install message queue server for Ubuntu
+    package:
+      name: rabbitmq-server
+      state: present
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Start and enable rabbitmq-server service for Ubuntu
+    service:
+      name: rabbitmq-server
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install Memcached for Ubuntu
+    package:
+      name: memcached
+      state: present
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Start and enable memcached service for Ubuntu
+    service:
+      name: memcached
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install Etcd for Ubuntu
+    package:
+      name: etcd
+      state: present
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Start and enable etcd service for Ubuntu
+    service:
+      name: etcd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Ubuntu"
